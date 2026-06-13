@@ -21,10 +21,10 @@
     </div>
 
     <button type="submit" class="btn btn-warning">
-        <i class="fas fa-save"></i> Save
+        <i class="fas fa-key"></i> Change Password
     </button>
 
     @if (session('status') === 'password-updated')
-        <span class="text-success ms-3">Saved.</span>
+        <span class="text-success ms-3">Password updated.</span>
     @endif
 </form>

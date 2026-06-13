@@ -27,7 +27,7 @@
 
     <div class="d-flex align-items-center gap-2">
         <button type="submit" class="btn btn-success">
-            <i class="fas fa-save"></i> Save
+            <i class="fas fa-save"></i> Save Profile
         </button>
         @if (session('status') === 'profile-updated')
             <span class="text-success">Saved.</span>

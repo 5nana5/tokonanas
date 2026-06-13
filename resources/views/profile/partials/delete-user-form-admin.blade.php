@@ -12,10 +12,7 @@
         <x-input-error class="text-danger" :messages="$errors->userDeletion->get('password')" />
     </div>
 
-    <div class="d-flex justify-content-between align-items-center">
-        <a href="{{ route('dashboard') }}" class="btn btn-secondary">
-            <i class="fas fa-chevron-left"></i> Back
-        </a>
+    <div class="text-right">
         <button type="submit" class="btn btn-danger">
             <i class="fas fa-user-slash"></i> Delete Account
         </button>

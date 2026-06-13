@@ -3,6 +3,7 @@
 @section('page_title', 'Dashboard')
 
 @section('content')
+@auth
 <!-- Info boxes -->
 <div class="row">
     <div class="col-12 col-sm-6 col-md-3">
@@ -46,6 +47,24 @@
     </div>
 </div>
 <!-- /.row -->
+@else
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card card-primary card-outline">
+            <div class="card-header">
+                <h3 class="card-title">Selamat datang di Tokonanas</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-text">Untuk masuk dan menggunakan semua fitur, silakan login terlebih dahulu.</p>
+                <a href="{{ route('login') }}" class="btn btn-primary">Login</a>
+                @if (Route::has('register'))
+                    <a href="{{ route('register') }}" class="btn btn-secondary">Register</a>
+                @endif
+            </div>
+        </div>
+    </div>
+</div>
+@endauth
 
 <!-- Main row -->
 <div class="row">
@@ -150,7 +169,7 @@
         </div>
         <!-- /.card -->
 
-        <!-- Statistik Pembayaran -->
+        <!-- Statistik Pembayaran Chart -->
         <div class="card">
             <div class="card-header border-0">
                 <h3 class="card-title">
@@ -158,36 +177,8 @@
                     Status Pembayaran
                 </h3>
             </div>
-            <div class="card-body">
-                @php
-                    $paid = \App\Models\Transaksi::where('payment_status', 'paid')->count();
-                    $pending = \App\Models\Transaksi::where('payment_status', 'pending')->count();
-                    $cancelled = \App\Models\Transaksi::where('payment_status', 'cancelled')->count();
-                    $total = $paid + $pending + $cancelled;
-                @endphp
-                <div class="text-center mb-3">
-                    <small class="text-muted">Status Pembayaran ({{ $total }} transaksi)</small>
-                </div>
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <span class="nav-link">
-                            <i class="fas fa-circle text-success"></i>
-                            <p class="text-sm">Lunas <span class="float-right">{{ $paid }}</span></p>
-                        </span>
-                    </li>
-                    <li class="nav-item">
-                        <span class="nav-link">
-                            <i class="fas fa-circle text-warning"></i>
-                            <p class="text-sm">Pending <span class="float-right">{{ $pending }}</span></p>
-                        </span>
-                    </li>
-                    <li class="nav-item">
-                        <span class="nav-link">
-                            <i class="fas fa-circle text-danger"></i>
-                            <p class="text-sm">Batal <span class="float-right">{{ $cancelled }}</span></p>
-                        </span>
-                    </li>
-                </ul>
+            <div class="card-body" style="position: relative; height: 250px;">
+                <canvas id="welcomePaymentStatusChart"></canvas>
             </div>
         </div>
         <!-- /.card -->
@@ -196,3 +187,36 @@
 </div>
 <!-- /.row -->
 @endsection
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Payment Status Chart on Welcome page
+    (function() {
+        const ctx = document.getElementById('welcomePaymentStatusChart');
+        if (!ctx) return;
+        
+        const paid = {{ \App\Models\Transaksi::where('payment_status', 'paid')->count() }};
+        const pending = {{ \App\Models\Transaksi::where('payment_status', 'pending')->count() }};
+        const cancelled = {{ \App\Models\Transaksi::where('payment_status', 'cancelled')->count() }};
+        
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Lunas', 'Pending', 'Batal'],
+                datasets: [{
+                    data: [paid, pending, cancelled],
+                    backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+                    borderColor: '#fff',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+    })();
+</script>

@@ -66,6 +66,15 @@
         height: 280px !important;
     }
 
+    .chart-scroll-container {
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+    }
+
+    .chart-scroll-container canvas {
+        min-width: 700px;
+    }
+
     .empty-state {
         min-height: 280px;
         display: flex;
@@ -154,9 +163,11 @@
 
     <div class="col-lg-6 mb-4">
         <div class="dashboard-box shadow-sm">
-            <h5>7-Day Revenue Trend</h5>
-            @if(array_sum($revenueTrendData) > 0)
-                <canvas id="revenueChartCanvas"></canvas>
+            <h5>Revenue Trend</h5>
+            @if(array_sum($revenueTrendDataValues) > 0)
+                <div class="chart-scroll-container">
+                    <canvas id="revenueChartCanvas"></canvas>
+                </div>
             @else
                 <div class="empty-state">No data yet</div>
             @endif
@@ -191,6 +202,7 @@
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.1.1/dist/chartjs-plugin-zoom.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         function updateClock () {
@@ -242,13 +254,18 @@
 
             var revenueChart = document.getElementById('revenueChartCanvas');
             if (revenueChart) {
+                var revenueLabels = {!! json_encode($revenueTrendLabels) !!};
+                var revenueValues = {!! json_encode($revenueTrendDataValues) !!};
+                var minWidth = Math.max(revenueLabels.length * 70, 700);
+                revenueChart.style.minWidth = minWidth + 'px';
+
                 new Chart(revenueChart, {
                     type: 'line',
                     data: {
-                        labels: {!! json_encode($revenueTrendLabels) !!},
+                        labels: revenueLabels,
                         datasets: [{
                             label: 'Revenue',
-                            data: {!! json_encode($revenueTrendData) !!},
+                            data: revenueValues,
                             borderColor: '#b45309',
                             backgroundColor: 'rgba(251, 191, 36, 0.16)',
                             fill: true,

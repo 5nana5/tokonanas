@@ -6,6 +6,9 @@ use App\Models\Customer;
 use App\Models\Produk;
 use App\Models\Transaksi;
 use App\Models\UserMarketing;
+use Carbon\Carbon;
+use DateInterval;
+use DatePeriod;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
@@ -23,12 +26,26 @@ class DashboardController extends Controller
             ->pluck('count', 'payment_status')
             ->toArray();
 
+        $revenueTrendData = Transaksi::selectRaw('DATE(transaction_date) as date, SUM(total_price) as total')
+            ->whereNotNull('transaction_date')
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get()
+            ->keyBy('date');
+
         $revenueTrendLabels = [];
-        $revenueTrendData = [];
-        for ($i = 6; $i >= 0; $i--) {
-            $date = now()->subDays($i);
-            $revenueTrendLabels[] = $date->format('d/m');
-            $revenueTrendData[] = (int) Transaksi::whereDate('created_at', $date)->sum('total_price');
+        $revenueTrendDataValues = [];
+
+        if ($revenueTrendData->isNotEmpty()) {
+            $start = Carbon::parse($revenueTrendData->keys()->first());
+            $end = Carbon::parse($revenueTrendData->keys()->last());
+            $period = new DatePeriod($start, new DateInterval('P1D'), $end->addDay());
+
+            foreach ($period as $date) {
+                $dateKey = $date->format('Y-m-d');
+                $revenueTrendLabels[] = $date->format('d/m/Y');
+                $revenueTrendDataValues[] = (int) ($revenueTrendData[$dateKey]->total ?? 0);
+            }
         }
 
         $topProducts = Transaksi::with('product')
@@ -65,7 +82,7 @@ class DashboardController extends Controller
             'totalRevenue',
             'paymentStatusCounts',
             'revenueTrendLabels',
-            'revenueTrendData',
+            'revenueTrendDataValues',
             'topProducts',
             'userMarketingPerformance'
         ));

@@ -9,15 +9,27 @@
             <div class="card-header">
                 <h3 class="card-title">
                     <i class="fas fa-receipt"></i>
-                    Daftar Transaksi
+                    Transactions List
                 </h3>
-                <div class="card-tools">
-                    <a href="{{ route('transaksi.create') }}" class="btn btn-primary btn-sm">
+                <div class="card-tools d-flex align-items-center">
+                    <a href="{{ route('transaksi.create') }}" class="btn btn-primary btn-sm me-2">
                         <i class="fas fa-plus"></i> Tambah Transaksi
                     </a>
-                    <a href="{{ route('transaksi.export') }}" class="btn btn-success btn-sm ms-2">
-                        <i class="fas fa-file-excel"></i> Export Excel
-                    </a>
+
+                    <form action="{{ route('transaksi.export') }}" method="GET" class="form-inline d-flex">
+                        <div class="input-group input-group-sm mr-2">
+                            <input type="date" name="start_date" class="form-control" value="{{ request('start_date') }}" placeholder="Start date">
+                        </div>
+                        <div class="input-group input-group-sm mr-2">
+                            <input type="date" name="end_date" class="form-control" value="{{ request('end_date') }}" placeholder="End date">
+                        </div>
+                        <button type="submit" class="btn btn-success btn-sm me-2" title="Export Periode">
+                            <i class="fas fa-file-excel"></i> Export Periode
+                        </button>
+                        <a href="{{ route('transaksi.export') }}" class="btn btn-outline-success btn-sm" title="Export Semua">
+                            <i class="fas fa-file-excel"></i> Export Semua
+                        </a>
+                    </form>
                 </div>
             </div>
 
@@ -92,7 +104,7 @@
                     </div>
                 @else
                     <div class="alert alert-info text-center">
-                        <i class="fas fa-info-circle"></i> Belum ada data Transaksi
+                        <i class="fas fa-info-circle"></i> No transactions yet
                     </div>
                 @endif
             </div>

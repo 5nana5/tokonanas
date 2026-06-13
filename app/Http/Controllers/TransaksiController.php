@@ -93,9 +93,24 @@ class TransaksiController extends Controller
         return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil dihapus');
     }
 
-    public function export()
+    public function export(Request $request)
     {
-        return Excel::download(new TransaksiExport(), 'transaksi.xlsx');
+        $request->validate([
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+        ]);
+
+        $start = $request->query('start_date');
+        $end = $request->query('end_date');
+
+        // Build filename
+        if ($start && $end) {
+            $fileName = sprintf('transaksi-%s-sampai-%s.xlsx', $start, $end);
+        } else {
+            $fileName = 'transaksi-semua.xlsx';
+        }
+
+        return Excel::download(new TransaksiExport($start, $end), $fileName);
     }
 }
 

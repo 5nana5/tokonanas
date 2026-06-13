@@ -92,7 +92,7 @@
                         <a href="{{ route('user_marketings.index') }}" class="nav-link @if(in_array(Route::currentRouteName(), ['user_marketings.index', 'user_marketings.create', 'user_marketings.edit', 'user_marketings.show'])) active @endif">
                             <i class="nav-icon fas fa-users"></i>
                             <p>
-                                User Marketing
+                                Marketing Users
                                 <span class="badge badge-info right">{{ \App\Models\UserMarketing::count() }}</span>
                             </p>
                         </a>
@@ -102,7 +102,7 @@
                         <a href="{{ route('produk.index') }}" class="nav-link @if(in_array(Route::currentRouteName(), ['produk.index', 'produk.create', 'produk.edit', 'produk.show'])) active @endif">
                             <i class="nav-icon fas fa-box"></i>
                             <p>
-                                Produk
+                                Products
                                 <span class="badge badge-warning right">{{ \App\Models\Produk::count() }}</span>
                             </p>
                         </a>
@@ -112,7 +112,7 @@
                         <a href="{{ route('customer.index') }}" class="nav-link @if(in_array(Route::currentRouteName(), ['customer.index', 'customer.create', 'customer.edit', 'customer.show'])) active @endif">
                             <i class="nav-icon fas fa-user-friends"></i>
                             <p>
-                                Customer
+                                Customers
                                 <span class="badge badge-success right">{{ \App\Models\Customer::count() }}</span>
                             </p>
                         </a>
@@ -122,7 +122,7 @@
                         <a href="{{ route('transaksi.index') }}" class="nav-link @if(in_array(Route::currentRouteName(), ['transaksi.index', 'transaksi.create', 'transaksi.edit', 'transaksi.show'])) active @endif">
                             <i class="nav-icon fas fa-receipt"></i>
                             <p>
-                                Transaksi
+                                Transactions
                                 <span class="badge badge-danger right">{{ \App\Models\Transaksi::count() }}</span>
                             </p>
                         </a>

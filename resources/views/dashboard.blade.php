@@ -84,12 +84,12 @@
         <div class="dashboard-header">
             <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
                 <div>
-                    <div class="dashboard-keyword"><i class="fas fa-chart-line"></i> Dashboard Penjualan</div>
-                    <h1 class="mb-2" style="font-size: 2rem; font-weight: 700; letter-spacing: -0.03em;">Ringkasan Operasional</h1>
-                    <p class="text-muted" style="max-width: 38rem;">Lihat performa penjualan, pendapatan, dan aktivitas marketing secara ringkas.</p>
+                        <div class="dashboard-keyword"><i class="fas fa-chart-line"></i> Sales Dashboard</div>
+                        <h1 class="mb-2" style="font-size: 2rem; font-weight: 700; letter-spacing: -0.03em;">Operational Summary</h1>
+                        <p class="text-muted" style="max-width: 38rem;">View sales performance, revenue, and marketing activity at a glance.</p>
                 </div>
                 <div class="text-right">
-                    <div class="text-muted">Waktu sekarang</div>
+                    <div class="text-muted">Current Time</div>
                     <div id="local-clock" class="h3 font-weight-bold" style="color: #fbbf24;"></div>
                 </div>
             </div>
@@ -101,7 +101,7 @@
     <div class="col-lg-2 col-md-4 col-sm-6 mb-4">
         <div class="dashboard-card bg-white shadow-sm">
             <div class="card-body">
-                <div class="metric-label">User Marketing</div>
+                <div class="metric-label">Marketing Users</div>
                 <div class="metric-value metric-value--gold">{{ number_format($userMarketingsCount) }}</div>
             </div>
         </div>
@@ -117,7 +117,7 @@
     <div class="col-lg-2 col-md-4 col-sm-6 mb-4">
         <div class="dashboard-card bg-white shadow-sm">
             <div class="card-body">
-                <div class="metric-label">Produk</div>
+                <div class="metric-label">Products</div>
                 <div class="metric-value">{{ number_format($productsCount) }}</div>
             </div>
         </div>
@@ -125,7 +125,7 @@
     <div class="col-lg-2 col-md-4 col-sm-6 mb-4">
         <div class="dashboard-card bg-white shadow-sm">
             <div class="card-body">
-                <div class="metric-label">Transaksi</div>
+                <div class="metric-label">Transactions</div>
                 <div class="metric-value">{{ number_format($transaksisCount) }}</div>
             </div>
         </div>
@@ -133,7 +133,7 @@
     <div class="col-lg-4 col-md-8 col-sm-12 mb-4">
         <div class="dashboard-card bg-white shadow-sm">
             <div class="card-body">
-                <div class="metric-label">Total Pendapatan</div>
+                <div class="metric-label">Total Revenue</div>
                 <div class="metric-value metric-value--gold">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</div>
             </div>
         </div>
@@ -143,22 +143,22 @@
 <div class="row">
     <div class="col-lg-6 mb-4">
         <div class="dashboard-box shadow-sm">
-            <h5>Status Pembayaran</h5>
+            <h5>Payment Status</h5>
             @if(array_sum($paymentStatusCounts) > 0)
                 <canvas id="paymentStatusChart"></canvas>
             @else
-                <div class="empty-state">Belum ada data</div>
+                <div class="empty-state">No data yet</div>
             @endif
         </div>
     </div>
 
     <div class="col-lg-6 mb-4">
         <div class="dashboard-box shadow-sm">
-            <h5>Trend Pendapatan 7 Hari</h5>
+            <h5>7-Day Revenue Trend</h5>
             @if(array_sum($revenueTrendData) > 0)
                 <canvas id="revenueChartCanvas"></canvas>
             @else
-                <div class="empty-state">Belum ada data</div>
+                <div class="empty-state">No data yet</div>
             @endif
         </div>
     </div>
@@ -167,22 +167,22 @@
 <div class="row">
     <div class="col-lg-6 mb-4">
         <div class="dashboard-box shadow-sm">
-            <h5>Produk Terlaris</h5>
+            <h5>Top Products</h5>
             @if($topProducts->count() > 0)
                 <canvas id="topProductsChart"></canvas>
             @else
-                <div class="empty-state">Belum ada data</div>
+                <div class="empty-state">No data yet</div>
             @endif
         </div>
     </div>
 
     <div class="col-lg-6 mb-4">
         <div class="dashboard-box shadow-sm">
-            <h5>Performa User Marketing</h5>
+            <h5>Marketing User Performance</h5>
             @if($userMarketingPerformance->count() > 0)
                 <canvas id="userMarketingChart"></canvas>
             @else
-                <div class="empty-state">Belum ada data</div>
+                <div class="empty-state">No data yet</div>
             @endif
         </div>
     </div>
@@ -196,7 +196,7 @@
         function updateClock () {
             var el = document.getElementById('local-clock');
             if (!el) return;
-            el.innerText = new Date().toLocaleString('id-ID', {
+            el.innerText = new Date().toLocaleString('en-US', {
                 weekday: 'long',
                 day: '2-digit',
                 month: 'long',
@@ -215,7 +215,7 @@
                 new Chart(paymentStatusChart, {
                     type: 'doughnut',
                     data: {
-                        labels: ['Lunas', 'Pending', 'Batal'],
+                        labels: ['Paid', 'Pending', 'Cancelled'],
                         datasets: [{
                             data: [
                                 {{ $paymentStatusCounts['paid'] ?? 0 }},
@@ -247,7 +247,7 @@
                     data: {
                         labels: {!! json_encode($revenueTrendLabels) !!},
                         datasets: [{
-                            label: 'Pendapatan',
+                            label: 'Revenue',
                             data: {!! json_encode($revenueTrendData) !!},
                             borderColor: '#b45309',
                             backgroundColor: 'rgba(251, 191, 36, 0.16)',
@@ -288,7 +288,7 @@
                     data: {
                         labels: {!! json_encode($topProducts->pluck('name')) !!},
                         datasets: [{
-                            label: 'Penjualan',
+                            label: 'Sales',
                             data: {!! json_encode($topProducts->pluck('sales')) !!},
                             backgroundColor: '#f59e0b',
                             borderColor: '#b45309',
@@ -323,7 +323,7 @@
                     data: {
                         labels: {!! json_encode($userMarketingPerformance->pluck('name')) !!},
                         datasets: [{
-                            label: 'Transaksi',
+                            label: 'Transactions',
                             data: {!! json_encode($userMarketingPerformance->pluck('transactions')) !!},
                             backgroundColor: '#4b5563',
                             borderColor: '#111827',
